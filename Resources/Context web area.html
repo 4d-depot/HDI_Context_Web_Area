@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+        }
+        .profile-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 350px;
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+        #jscode {
+            color: red;
+            margin-bottom: 15px;
+        }
+        #jscode {
+            color: red;
+            margin-bottom: 15px;
+        }
+        .profile-card button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4f46e5;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .profile-card button:hover {
+            background-color: #4338ca;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        label {
+            margin-left: 5px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <!-- Use $4d to dynamically set the user image and info -->
+        <h2 id="lastname"></h2>
+        <p id="firstname"></p>
+        <p id="phone"></p>
+        <p id="email"></p>
+        <button onclick="showPrevious()"><</button>&nbsp;<button onclick="showNext()">></button>
+        <div class="checkbox-container">
+            <label for="traceCheckbox"><input type="checkbox" id="traceCheckbox" onclick="onTraceClick()"> Trace</label>
+        </div>
+        <p id="title">Last javascript function called:</p>
+        <p id="jscode"></p>
+        
+    </div>
+    
+
+    <script>
+        function display(response,jscode) {
+            if (response!=null){
+                document.getElementById("title").innerText = "Last javascript function called:";
+
+                document.getElementById("lastname").innerText = String(response.Lastname);
+                document.getElementById("firstname").innerText = response.Firstname;
+                document.getElementById("phone").innerText = response.Phone;
+                document.getElementById("email").innerText = response.email;
+                document.getElementById("traceCheckbox").disabled=false;
+            }else{
+                document.getElementById("lastname").innerText = "No context loaded";           
+                document.getElementById("firstname").innerText = "-";
+                document.getElementById("phone").innerText = "-";
+                document.getElementById("email").innerText = "-";
+                document.getElementById("traceCheckbox").disabled=true;
+            }
+        }
+        function displayCode(jscode){
+            document.getElementById("jscode").innerText = String(jscode);
+            document.getElementById("title").innerText = "This function cannot be called:";
+        }
+
+        function showNext() {
+            $4d.next(function(reponse) {
+                display(reponse);
+            });
+            displayCode("$4d.next()");
+        }
+        function showPrevious() {
+            $4d.previous(function(reponse) {
+                display(reponse);
+            });
+            displayCode("$4d.previous()");
+        }
+        function onTraceClick(check) {
+            $4d.setTrace(document.getElementById("traceCheckbox").checked);
+            displayCode("$4d.setTrace();");
+            document.getElementById("title").innerText = "Last javascript function called:";
+        }
+        function showCurrent() {
+            $4d.current(function(reponse) {
+                    display(reponse);
+            });
+            displayCode("$4d.current()");
+        }
+        showCurrent();
+    </script>
+</body>
+</html>
